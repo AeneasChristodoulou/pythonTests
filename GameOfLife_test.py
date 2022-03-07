@@ -45,7 +45,7 @@ def evolutionary_grid_generator(grid: Grid) -> Grid:
             neighbour_N = grid[y_position - 1][x_position] if y_position != 0 else 0
             neighbour_E = grid[y_position][x_position + 1] if x_position != len(a_line)-1 else 0
             neighbour_S = grid[y_position +1][x_position] if y_position != len(grid)-1 else 0
-            neighbour_W = grid[y_position][x_position - 1] if x_position != 0 else 0
+            neighbour_W = get_grid_value(0, -1, y_position, x_position, grid)
 
             neighbour_NE = get_grid_value(-1, 1, y_position, x_position, grid)
             neighbour_SE = get_grid_value(1, 1, y_position, x_position, grid)
