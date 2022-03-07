@@ -57,7 +57,11 @@ def evolutionary_grid_generator(grid: Grid) -> Grid:
             NorthWest = get_neighbour_value(-1, -1, y_position, x_position, grid)
 
             total = North + East + South + West + NorthEast + SouthEast + SouthWest + NorthWest
-            if total >= 2 and result[y_position][x_position] == 1:
+            is_alive = result[y_position][x_position] == 1
+
+            if total == 2 and is_alive:
+                result[y_position][x_position] = 1
+            elif total == 3:
                 result[y_position][x_position] = 1
             else:
                 result[y_position][x_position] = 0
@@ -88,7 +92,34 @@ def test_stay_alive():
             [0,1,0],
             [0,1,1]
         ]) == [
-            [0,1,0],
+            [0,1,1],
             [0,1,1]
         ]
 
+
+def test_dont_stay_alive():
+
+    assert evolutionary_grid_generator(
+        [
+            [0,1,0],
+            [1,1,1],
+            [0,1,0]
+        ])  == [
+                [1,1,1],
+                [1,0,1],
+                [1,1,1]
+            ]
+
+
+def test_get_alive():
+
+    assert evolutionary_grid_generator(
+        [
+            [0, 1, 0],
+            [0, 0, 1],
+            [0, 1, 0]
+        ]) == [
+               [0, 0, 0],
+               [0, 1, 1],
+               [0, 0, 0]
+           ]
