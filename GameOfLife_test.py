@@ -1,14 +1,30 @@
 from copy import deepcopy
 from typing import List
 import fire
+from time import sleep
+from random import randrange
 
 
 Grid = List[List[int]]
 
 
 def main():
-    pass
+    grid = create_dead_cells(55, 205)
+    grid = initialize_random(grid)
+    build_printable_grid(grid)
+    while(True):
+        sleep(0.01)
+        grid = evolutionary_grid_generator(grid)
+        build_printable_grid(grid)
 
+def initialize_random(grid):
+    for y_position, a_line in enumerate(grid):
+        for x_position, value in enumerate(a_line):
+            random_number = randrange(100)
+            if random_number < 30:
+                    grid[y_position][x_position] = 1
+
+    return grid
 
 def create_dead_cells(x :int =2, y :int =2) -> Grid:
     grid_y = []
@@ -17,15 +33,9 @@ def create_dead_cells(x :int =2, y :int =2) -> Grid:
 
     grid_x = []
     for row_number in range(0, x):
-        grid_x.append(grid_y)
+        grid_x.append(deepcopy(grid_y))
 
     return grid_x
-
-
-def test_create_grid():
-    assert create_dead_cells(2, 5) == [ [0, 0, 0, 0, 0], [0, 0, 0, 0, 0] ]
-    assert create_dead_cells(1, 2) == [ [0, 0] ]
-    assert create_dead_cells(2, 2) == [ [0, 0], [0, 0] ]
 
 
 def get_neighbour_value(y, x, y_position, x_position, grid):
@@ -75,22 +85,24 @@ def evolutionary_grid_generator(grid: Grid) -> Grid:
 
 
 def build_printable_grid(grid):
-
     alive = "*"
-    dead = "."
-    line_str = "\033c"
-    for y_position, a_line in enumerate(grid):
-        for x_position, value in enumerate(a_line):
+    dead = " "
+    print("\033c")
+    for a_line in grid:
+        line_str = ""
+        for value in a_line:
             if value == 1:
-                    line_str+=alive
+                line_str += alive
             else:
                 line_str += dead
-        line_str+="\n"
-
-    print(line_str)
+        print(line_str)
 
 
 
+def test_create_grid():
+    assert create_dead_cells(2, 5) == [ [0, 0, 0, 0, 0], [0, 0, 0, 0, 0] ]
+    assert create_dead_cells(1, 2) == [ [0, 0] ]
+    assert create_dead_cells(2, 2) == [ [0, 0], [0, 0] ]
 
 
 def test_stay_alive():
@@ -147,6 +159,7 @@ def test_get_alive():
                [0, 1, 1],
                [0, 0, 0]
            ]
+
 
 def test_limitations():
     assert evolutionary_grid_generator(
