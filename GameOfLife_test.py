@@ -1,8 +1,13 @@
 from copy import deepcopy
 from typing import List
+import fire
 
 
 Grid = List[List[int]]
+
+
+def main():
+    pass
 
 
 def create_dead_cells(x :int =2, y :int =2) -> Grid:
@@ -69,6 +74,25 @@ def evolutionary_grid_generator(grid: Grid) -> Grid:
     return result
 
 
+def build_printable_grid(grid):
+
+    alive = "*"
+    dead = "."
+    line_str = "\033c"
+    for y_position, a_line in enumerate(grid):
+        for x_position, value in enumerate(a_line):
+            if value == 1:
+                    line_str+=alive
+            else:
+                line_str += dead
+        line_str+="\n"
+
+    print(line_str)
+
+
+
+
+
 def test_stay_alive():
     """
         Is the Cell able to survive?
@@ -123,3 +147,23 @@ def test_get_alive():
                [0, 1, 1],
                [0, 0, 0]
            ]
+
+def test_limitations():
+    assert evolutionary_grid_generator(
+        [
+            [1, 1, 0, 0, 0],
+            [0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0],
+            [1, 0, 1, 0, 1],
+            [1, 0, 0, 1, 0]
+        ]) == [
+            [1, 1, 0, 0, 0],
+            [1, 1, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [0, 1, 1, 0, 1],
+            [0, 1, 0, 1, 0]
+           ]
+
+
+if __name__ == '__main__':
+        fire.Fire()
